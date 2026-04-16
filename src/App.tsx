@@ -605,13 +605,13 @@ function App() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-              <div className="gsap-fade-up">
+              <div >
                 <div className="bg-amber-50 p-6 sm:p-8 rounded-xl">
                   <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
                     Informações de Contato
                   </h3>
                   <div className="space-y-4 sm:space-y-6">
-                    <div className="flex items-center gsap-fade-up">
+                    <div className="flex items-center">
                       <Phone className="w-5 sm:w-6 h-5 sm:h-6 text-amber-600 mr-3 sm:mr-4 flex-shrink-0" />
                       <div>
                         <div className="font-semibold text-sm sm:text-base">
@@ -622,7 +622,7 @@ function App() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gsap-fade-up">
+                    <div className="flex items-center">
                       <Mail className="w-5 sm:w-6 h-5 sm:h-6 text-amber-600 mr-3 sm:mr-4 flex-shrink-0" />
                       <div>
                         <div className="font-semibold text-sm sm:text-base">
@@ -633,7 +633,7 @@ function App() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gsap-fade-up">
+                    <div className="flex items-center">
                       <MapPin className="w-5 sm:w-6 h-5 sm:h-6 text-amber-600 mr-3 sm:mr-4 flex-shrink-0" />
                       <div>
                         <div className="font-semibold text-sm sm:text-base">
