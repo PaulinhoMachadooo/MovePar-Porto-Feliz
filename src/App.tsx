@@ -7,15 +7,13 @@ import {
   MapPin,
   ChevronDown,
   ArrowRight,
-  Star,
   Users,
   Award,
   Clock,
-  Send,
   Facebook,
   Instagram,
   MessageCircle,
-  Sofa,
+  Factory,
 } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -25,120 +23,7 @@ import { Router, useRouter } from "./components/Router";
 import ProjectGallery from "./components/ProjectGallery";
 import logo from "../src/images/logo.png";
 
-// Registrar plugins GSAP
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
-
-// Contact Form Component - movido para fora do App
-const ContactForm = () => {
-  const formRef = React.useRef<HTMLFormElement>(null);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Aqui você pode adicionar a lógica de envio do formulário
-    alert("Mensagem enviada com sucesso! Entraremos em contato em breve.");
-  };
-
-  return {
-    /*<form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="animate-on-scroll">
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Nome Completo
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300"
-            placeholder="Seu nome completo"
-          />
-        </div>
-        <div className="animate-on-scroll" style={{ animationDelay: "0.1s" }}>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            E-mail
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300"
-            placeholder="seu@email.com"
-          />
-        </div>
-      </div>
-      <div className="animate-on-scroll" style={{ animationDelay: "0.2s" }}>
-        <label
-          htmlFor="phone"
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          Telefone
-        </label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300"
-          placeholder="(11) 99999-9999"
-        />
-      </div>
-      <div className="animate-on-scroll" style={{ animationDelay: "0.3s" }}>
-        <label
-          htmlFor="project"
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          Tipo de Projeto
-        </label>
-        <select
-          id="project"
-          name="project"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300"
-        >
-          <option value="">Selecione o tipo de projeto</option>
-          <option value="cozinha">Cozinha Planejada</option>
-          <option value="dormitorio">Dormitório Completo</option>
-          <option value="sala">Sala de Estar</option>
-          <option value="escritorio">Home Office</option>
-          <option value="banheiro">Banheiro Planejado</option>
-          <option value="closet">Closet</option>
-          <option value="outro">Outro</option>
-        </select>
-      </div>
-      <div className="animate-on-scroll" style={{ animationDelay: "0.4s" }}>
-        <label
-          htmlFor="message"
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          Mensagem
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          rows={4}
-          required
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 resize-none"
-          placeholder="Conte-nos sobre seu projeto dos sonhos..."
-        ></textarea>
-      </div>
-      <div className="animate-on-scroll" style={{ animationDelay: "0.5s" }}>
-        <button
-          type="submit"
-          className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white py-4 px-8 rounded-lg font-semibold hover:from-amber-700 hover:to-amber-800 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-        >
-          <Send className="w-5 h-5" />
-          Solicitar Orçamento Gratuito
-        </button>
-      </div>
-    </form>*/
-  };
-};
 
 function App() {
   const { currentRoute, navigate, params } = useRouter();
@@ -168,38 +53,25 @@ function App() {
     setGalleryOpen(false);
   };
 
+  const scrollToSection = (sectionId: string) => {
+    if (currentRoute !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    } else {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
 
-    // GSAP Timeline para animações iniciais
-    const tl = gsap.timeline();
-
-    // Animação do Hero
-
-    // Animação do Header com scroll
-    ScrollTrigger.create({
-      trigger: "body",
-      start: "top -50px",
-      end: "bottom bottom",
-      onUpdate: (self) => {
-        const header = document.querySelector("header");
-        if (self.direction === 1) {
-          gsap.to(header, { y: -100, duration: 0.3 });
-        } else {
-          gsap.to(header, { y: 0, duration: 0.3 });
-        }
-      },
-    });
-
-    // Animações de scroll para seções
-    gsap.utils.toArray(".gsap-fade-up").forEach((element, index) => {
+    gsap.utils.toArray(".gsap-fade-up").forEach((element) => {
       gsap.fromTo(
         element,
-        {
-          y: 100,
-          opacity: 0,
-        },
+        { y: 100, opacity: 0 },
         {
           y: 0,
           opacity: 1,
@@ -215,16 +87,11 @@ function App() {
       );
     });
 
-    // Animação stagger para cards
     gsap.utils.toArray(".gsap-stagger").forEach((container) => {
-      const items = container.querySelectorAll(".gsap-stagger-item");
+      const items = (container as Element).querySelectorAll(".gsap-stagger-item");
       gsap.fromTo(
         items,
-        {
-          y: 80,
-          opacity: 0,
-          scale: 0.8,
-        },
+        { y: 80, opacity: 0, scale: 0.8 },
         {
           y: 0,
           opacity: 1,
@@ -242,38 +109,6 @@ function App() {
       );
     });
 
-    // Animação de contadores
-    /*gsap.utils.toArray(".counter").forEach((counter) => {
-      const target = parseInt(counter.getAttribute("data-target"));
-      gsap.fromTo(
-        counter,
-        { textContent: 0 },
-        {
-          textContent: target,
-          duration: 2,
-          ease: "power2.out",
-          snap: { textContent: 1 },
-          scrollTrigger: {
-            trigger: counter,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          },
-          onUpdate: function () {
-            counter.textContent =
-              Math.ceil(counter.textContent) +
-              (target > 100
-                ? "+"
-                : target === 100
-                ? "%"
-                : target === 24
-                ? "h"
-                : "+");
-          },
-        }
-      );
-    });*/
-
-    // Animação de parallax para hero
     gsap.to(".hero-bg", {
       yPercent: -50,
       ease: "none",
@@ -285,10 +120,8 @@ function App() {
       },
     });
 
-    // Animação de hover para cards
     gsap.utils.toArray(".hover-card").forEach((card) => {
       const tl = gsap.timeline({ paused: true });
-
       tl.to(card, {
         y: -10,
         scale: 1.02,
@@ -296,12 +129,10 @@ function App() {
         duration: 0.3,
         ease: "power2.out",
       });
-
-      card.addEventListener("mouseenter", () => tl.play());
-      card.addEventListener("mouseleave", () => tl.reverse());
+      (card as Element).addEventListener("mouseenter", () => tl.play());
+      (card as Element).addEventListener("mouseleave", () => tl.reverse());
     });
 
-    // Animação de texto digitando
     gsap.to(".typing-text", {
       duration: 2,
       text: "Transformam Ambientes",
@@ -315,7 +146,6 @@ function App() {
     };
   }, []);
 
-  // Roteamento
   if (currentRoute.startsWith("/servico/")) {
     const serviceId = params.serviceId;
     if (serviceId) {
@@ -397,34 +227,10 @@ function App() {
     },
   ];
 
-  const testimonials = [
-    {
-      name: "Ana Silva",
-      text: "Projeto incrível! Transformaram minha cozinha pequena em um espaço funcional e lindo. Superou todas as expectativas!",
-      rating: 5,
-      image:
-        "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100",
-    },
-    {
-      name: "Carlos Santos",
-      text: "Profissionais excepcionais. Entregaram no prazo e com qualidade impecável. Recomendo sem hesitar!",
-      rating: 5,
-      image:
-        "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=100",
-    },
-    {
-      name: "Marina Costa",
-      text: "Meu closet ficou um sonho! Cada detalhe foi pensado para otimizar o espaço. Atendimento nota 10!",
-      rating: 5,
-      image:
-        "https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=100",
-    },
-  ];
-
   return (
     <Router>
       <div>
-        {/* Header */}
+        {/* Header - always fixed, never hides */}
         <header
           className={`fixed top-0 w-full z-50 transition-all duration-500 ${
             scrollY > 50
@@ -434,49 +240,47 @@ function App() {
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-18 lg:h-20">
-              <div className="flex items-center">
+              <div className="flex items-center gap-3">
                 <button
                   onClick={() => navigate("/")}
-                  className={`flex items-center gap-2 sm:gap-3 text-2xl lg:text-3xl font-bold transition-all duration-500 hover:scale-105 ${
-                    scrollY > 50
-                      ? "text-gray-900"
-                      : "text-amber-600 drop-shadow-lg"
-                  }`}
+                  className="flex items-center gap-2 sm:gap-3 transition-all duration-500 hover:scale-105"
                 >
                   <img src={logo} className="h-12 w-auto" alt="Movepar logo" />
                 </button>
+                {/* Fabricação Própria Badge */}
+                <div
+                  className={`hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold transition-all duration-500 ${
+                    scrollY > 50
+                      ? "border-amber-300 bg-amber-50 text-amber-700"
+                      : "border-amber-400/60 bg-amber-500/20 text-amber-200"
+                  }`}
+                >
+                  <Factory size={13} />
+                  <span>Fabricação Própria</span>
+                </div>
               </div>
 
               {/* Desktop Navigation */}
               <nav className="hidden lg:flex space-x-8 xl:space-x-10">
-                {["Início", "Serviços", "Projetos", "Sobre", "Contato"].map(
-                  (item) => (
-                    <button
-                      key={item}
-                      onClick={() => {
-                        if (currentRoute !== "/") {
-                          navigate("/");
-                          setTimeout(() => {
-                            document
-                              .getElementById(item.toLowerCase())
-                              ?.scrollIntoView({ behavior: "smooth" });
-                          }, 100);
-                        } else {
-                          document
-                            .getElementById(item.toLowerCase())
-                            ?.scrollIntoView({ behavior: "smooth" });
-                        }
-                      }}
-                      className={`relative font-medium text-base xl:text-lg transition-all duration-300 hover:text-amber-500 hover:scale-105 ${
-                        scrollY > 50
-                          ? "text-gray-700"
-                          : "text-white drop-shadow-md"
-                      } after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-amber-500 after:transition-all after:duration-300 hover:after:w-full`}
-                    >
-                      {item}
-                    </button>
-                  ),
-                )}
+                {[
+                  { label: "Início", id: "início" },
+                  { label: "Serviços", id: "serviços" },
+                  { label: "Projetos", id: "projetos" },
+                  { label: "Sobre", id: "sobre" },
+                  { label: "Contato", id: "contato" },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`relative font-medium text-base xl:text-lg transition-all duration-300 hover:text-amber-500 hover:scale-105 ${
+                      scrollY > 50
+                        ? "text-gray-700"
+                        : "text-white drop-shadow-md"
+                    } after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-amber-500 after:transition-all after:duration-300 hover:after:w-full`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
               </nav>
 
               {/* Mobile Menu Button */}
@@ -497,18 +301,28 @@ function App() {
           {isMenuOpen && (
             <div className="lg:hidden bg-white/98 backdrop-blur-lg border-t border-gray-100 shadow-xl">
               <nav className="px-4 py-6 space-y-4">
-                {["Início", "Serviços", "Projetos", "Sobre", "Contato"].map(
-                  (item) => (
-                    <a
-                      key={item}
-                      href={`#${item.toLowerCase()}`}
-                      className="block text-yellow-400 hover:text-amber-600 transition-all duration-300 py-2 px-3 rounded-lg hover:bg-amber-50 font-medium text-lg"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item}
-                    </a>
-                  ),
-                )}
+                {[
+                  { label: "Início", id: "início" },
+                  { label: "Serviços", id: "serviços" },
+                  { label: "Projetos", id: "projetos" },
+                  { label: "Sobre", id: "sobre" },
+                  { label: "Contato", id: "contato" },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      scrollToSection(item.id);
+                      setIsMenuOpen(false);
+                    }}
+                    className="block w-full text-left text-amber-700 hover:text-amber-600 transition-all duration-300 py-2 px-3 rounded-lg hover:bg-amber-50 font-medium text-lg"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                <div className="flex items-center gap-2 px-3 py-2 mt-2 border-t border-gray-100">
+                  <Factory size={16} className="text-amber-600" />
+                  <span className="text-sm font-semibold text-amber-700">Fabricação Própria</span>
+                </div>
               </nav>
             </div>
           )}
@@ -517,10 +331,10 @@ function App() {
         {/* Hero Section with Parallax */}
         <section
           id="início"
-          className=" relative h-screen flex items-center justify-center overflow-hidden"
+          className="relative h-screen flex items-center justify-center overflow-hidden"
         >
           <div
-            className=" absolute inset-0 bg-cover bg-center bg-fixed"
+            className="absolute inset-0 bg-cover bg-center bg-fixed"
             style={{
               backgroundImage:
                 "url(https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1920)",
@@ -551,12 +365,7 @@ function App() {
               </a>
               <button
                 className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
-                onClick={() => {
-                  const section = document.getElementById("projetos");
-                  if (section) {
-                    section.scrollIntoView({ behavior: "smooth" });
-                  }
-                }}
+                onClick={() => scrollToSection("projetos")}
               >
                 Ver Projetos
               </button>
@@ -564,15 +373,10 @@ function App() {
           </div>
 
           {/* Scroll Indicator */}
-          <div className="scroll-indicator absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+          <div className="scroll-indicator absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce cursor-pointer">
             <ChevronDown
               size={32}
-              onClick={() => {
-                const section = document.getElementById("serviços");
-                if (section) {
-                  section.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
+              onClick={() => scrollToSection("serviços")}
             />
           </div>
         </section>
@@ -582,10 +386,7 @@ function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="gsap-stagger grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
               <div className="gsap-stagger-item">
-                <div
-                  className="counter text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-600 mb-1 sm:mb-2"
-                  data-target="500"
-                >
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-600 mb-1 sm:mb-2">
                   +500
                 </div>
                 <div className="text-gray-600 text-xs sm:text-sm lg:text-base">
@@ -593,10 +394,7 @@ function App() {
                 </div>
               </div>
               <div className="gsap-stagger-item">
-                <div
-                  className="counter text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-600 mb-1 sm:mb-2"
-                  data-target="15"
-                >
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-600 mb-1 sm:mb-2">
                   +10
                 </div>
                 <div className="text-gray-600 text-xs sm:text-sm lg:text-base">
@@ -604,10 +402,7 @@ function App() {
                 </div>
               </div>
               <div className="gsap-stagger-item">
-                <div
-                  className="counter text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-600 mb-1 sm:mb-2"
-                  data-target="100"
-                >
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-600 mb-1 sm:mb-2">
                   100%
                 </div>
                 <div className="text-gray-600 text-xs sm:text-sm lg:text-base">
@@ -615,10 +410,7 @@ function App() {
                 </div>
               </div>
               <div className="gsap-stagger-item">
-                <div
-                  className="counter text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-600 mb-1 sm:mb-2"
-                  data-target="24"
-                >
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-600 mb-1 sm:mb-2">
                   24h
                 </div>
                 <div className="text-gray-600 text-xs sm:text-sm lg:text-base">
@@ -763,9 +555,16 @@ function App() {
                     </div>
                   </div>
                 </div>
-                {/*<button className="bg-amber-600 hover:bg-amber-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm sm:text-base">
-                  Conhecer Nossa História
-                </button>*/}
+                {/* Fabricação Própria highlight */}
+                <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-5 py-4">
+                  <div className="bg-amber-600 rounded-lg p-2 flex-shrink-0">
+                    <Factory size={22} className="text-white" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-gray-900 text-sm sm:text-base">Fabricação 100% Própria</div>
+                    <div className="text-gray-600 text-xs sm:text-sm">Controle total de qualidade desde a produção até a entrega.</div>
+                  </div>
+                </div>
               </div>
               <div className="gsap-fade-up order-first lg:order-last">
                 <div className="relative">
@@ -786,54 +585,6 @@ function App() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials */}
-        {/* <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10 sm:mb-12 lg:mb-16 gsap-fade-up">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 px-4">
-                O Que Nossos Clientes Dizem
-              </h2>
-              <p className="text-base sm:text-lg lg:text-xl text-gray-600 px-4">
-                Depoimentos de quem já transformou sua casa conosco.
-              </p>
-            </div>
-
-            <div className="gsap-stagger grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {testimonials.map((testimonial, index) => (
-                <div
-                  key={index}
-                  className="gsap-stagger-item hover-card bg-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
-                >
-                  <div className="flex items-center mb-3 sm:mb-4">
-                    <img
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      className="w-10 sm:w-12 h-10 sm:h-12 rounded-full object-cover mr-3 sm:mr-4"
-                    />
-                    <div>
-                      <div className="font-semibold text-gray-900 text-sm sm:text-base">
-                        {testimonial.name}
-                      </div>
-                      <div className="flex items-center">
-                        {[...Array(testimonial.rating)].map((_, i) => (
-                          <Star
-                            key={i}
-                            size={14}
-                            className="text-amber-400 fill-current"
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 italic text-sm sm:text-base leading-relaxed">
-                    "{testimonial.text}"
-                  </p>
-                </div>
-              ))}
             </div>
           </div>
         </section>
@@ -896,47 +647,6 @@ function App() {
                   </div>
                 </div>
               </div>
-
-              {/*<div className="gsap-fade-up">
-               <form className="gsap-stagger space-y-4 sm:space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                    <input
-                      type="text"
-                      placeholder="Seu nome"
-                      className="gsap-stagger-item w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent transition-all text-sm sm:text-base"
-                    />
-                    <input
-                      type="email"
-                      placeholder="Seu e-mail"
-                      className="gsap-stagger-item w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent transition-all text-sm sm:text-base"
-                    />
-                  </div>
-                  <input
-                    type="tel"
-                    placeholder="Seu telefone"
-                    className="gsap-stagger-item w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent transition-all text-sm sm:text-base"
-                  />
-                  <select className="gsap-stagger-item w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent transition-all text-sm sm:text-base">
-                    <option>Tipo de projeto</option>
-                    <option>Cozinha</option>
-                    <option>Closet</option>
-                    <option>Home Office</option>
-                    <option>Sala</option>
-                    <option>Outro</option>
-                  </select>
-                  <textarea
-                    rows={4}
-                    placeholder="Descreva seu projeto"
-                    className="gsap-stagger-item w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent transition-all text-sm sm:text-base resize-none"
-                  ></textarea>
-                  <button
-                    type="submit"
-                    className="gsap-stagger-item w-full bg-amber-600 hover:bg-amber-700 text-white py-3 sm:py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
-                  >
-                    Solicitar Orçamento Gratuito
-                  </button>
-                </form>
-              </div>*/}
             </div>
           </div>
         </section>
@@ -953,7 +663,11 @@ function App() {
                   Transformando ambientes com móveis planejados de qualidade
                   superior há mais de 30 anos.
                 </p>
-                <div className="flex gap-4 mt-4">
+                <div className="flex items-center gap-2 mb-4 bg-amber-600/10 border border-amber-600/30 rounded-lg px-3 py-2">
+                  <Factory size={15} className="text-amber-500 flex-shrink-0" />
+                  <span className="text-amber-400 text-xs font-semibold">Fabricação Própria</span>
+                </div>
+                <div className="flex gap-4">
                   <a
                     href="https://wa.me/5543996824645"
                     target="_blank"
@@ -987,29 +701,85 @@ function App() {
                 <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
                   Serviços
                 </h4>
-                <ul className="space-y-1 sm:space-y-2 text-gray-400 text-sm sm:text-base">
-                  <li>Cozinhas Planejadas</li>
-                  <li>Closets e Dormitórios</li>
-                  <li>Home Office</li>
-                  <li>Salas de Estar</li>
+                <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
+                  <li>
+                    <button
+                      onClick={() => handleServiceClick("cozinhas")}
+                      className="hover:text-amber-500 transition-colors text-left"
+                    >
+                      Cozinhas Planejadas
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => handleServiceClick("closets")}
+                      className="hover:text-amber-500 transition-colors text-left"
+                    >
+                      Closets e Dormitórios
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => handleServiceClick("home-office")}
+                      className="hover:text-amber-500 transition-colors text-left"
+                    >
+                      Comercial
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => handleServiceClick("salas")}
+                      className="hover:text-amber-500 transition-colors text-left"
+                    >
+                      Salas de Estar
+                    </button>
+                  </li>
                 </ul>
               </div>
               <div className="gsap-stagger-item">
                 <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
                   Empresa
                 </h4>
-                <ul className="space-y-1 sm:space-y-2 text-gray-400 text-sm sm:text-base">
-                  <li>Sobre Nós</li>
-                  <li>Projetos</li>
-                  <li>Depoimentos</li>
-                  <li>Contato</li>
+                <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
+                  <li>
+                    <button
+                      onClick={() => scrollToSection("sobre")}
+                      className="hover:text-amber-500 transition-colors text-left"
+                    >
+                      Sobre Nós
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => scrollToSection("projetos")}
+                      className="hover:text-amber-500 transition-colors text-left"
+                    >
+                      Projetos
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => scrollToSection("contato")}
+                      className="hover:text-amber-500 transition-colors text-left"
+                    >
+                      Depoimentos
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => scrollToSection("contato")}
+                      className="hover:text-amber-500 transition-colors text-left"
+                    >
+                      Contato
+                    </button>
+                  </li>
                 </ul>
               </div>
               <div className="gsap-stagger-item">
                 <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
                   Contato
                 </h4>
-                <ul className="space-y-1 sm:space-y-2 text-gray-400 text-sm sm:text-base">
+                <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
                   <li>
                     <a
                       href="https://wa.me/5543996824645"
@@ -1037,12 +807,37 @@ function App() {
               </div>
             </div>
             <div className="mt-8 border-t border-gray-800 pt-6 text-center text-gray-400">
-              <p className="text-sm ">
+              <p className="text-sm">
                 &copy; 2025 Movepar. Todos os direitos reservados.
               </p>
             </div>
           </div>
         </footer>
+
+        {/* Floating WhatsApp Button */}
+        <a
+          href="https://wa.me/5543996824645"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Fale conosco pelo WhatsApp"
+          className="fixed bottom-6 right-6 z-50 group flex items-center gap-3"
+        >
+          <span className="hidden group-hover:flex items-center bg-white text-gray-800 text-sm font-semibold px-4 py-2 rounded-full shadow-xl border border-gray-100 whitespace-nowrap transition-all duration-300">
+            Fale conosco
+          </span>
+          <div className="relative flex items-center justify-center w-14 h-14 bg-green-500 hover:bg-green-600 rounded-full shadow-2xl transition-all duration-300 hover:scale-110">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-7 h-7 text-white"
+            >
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+            {/* Pulse ring */}
+            <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-30"></span>
+          </div>
+        </a>
 
         {/* Gallery Modal */}
         <ProjectGallery
